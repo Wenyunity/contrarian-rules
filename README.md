@@ -14,6 +14,8 @@ Your messages have a limit of 240 characters and to prevent bot limits there is 
 If you disobey this you will either get a no-entry (too long) or a clock (too fast).
 
 ## Hidden Messages
+All players will have a hidden message buffer where their most recent messages will be private.
+
 After you fill up your hidden message buffer, your oldest messages will be posted publically in a channel as the newer messages push the older ones out of the buffer. Moving response ideas into this public channel is not recommended but keeping it in your hidden message queue is 100% fair.
 
 # Rules
