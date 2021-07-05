@@ -1,7 +1,7 @@
 const emojiList = '7';
 
 {
-	module.exports = {
+  module.exports = {
     check(message) { return rule(message); },
   };
 }
@@ -13,37 +13,37 @@ const emojiList = '7';
 // However; if it ends up looping, the rule succeeds.
 function rule(message) {
 
-	// Setup for the rule
-	const upperMessage = message.toUpperCase();
-	const visitList = [];
-	let position = 0;
-	let limit = 0;
+  // Setup for the rule
+  const upperMessage = message.toUpperCase();
+  const visitList = [];
+  let position = 0;
+  let limit = 0;
 
-	// Iterate through the rule until a loop or a non-character termination.
-	while (limit < message.length + 10) {
+  // Iterate through the rule until a loop or a non-character termination.
+  while (limit < message.length + 10) {
 
-		// If we've been here, then a loop has been made
-		if (visitList[position]) {
-			return emojiList;
-		}
+    // If we've been here, then a loop has been made
+    if (visitList[position]) {
+      return emojiList;
+    }
 
-		// Get the character code of the current letter, minus 64
-		// minus 64 is so A-Z will be the correct 1-26 value
-		const moveN = upperMessage.charCodeAt(position) - 64;
+    // Get the character code of the current letter, minus 64
+    // minus 64 is so A-Z will be the correct 1-26 value
+    const moveN = upperMessage.charCodeAt(position) - 64;
 
-		// Not a correct character, game over
-		if (moveN < 1 || moveN > 26) {
-			return false;
-		}
+    // Not a correct character, game over
+    if (moveN < 1 || moveN > 26) {
+      return false;
+    }
 
-		// Mark that we have been here
-		visitList[position] = true;
+    // Mark that we have been here
+    visitList[position] = true;
 
-		// Move to a new position
-		position = (position + moveN) % message.length;
-		limit = limit + 1;
-	}
+    // Move to a new position
+    position = (position + moveN) % message.length;
+    limit = limit + 1;
+  }
 
-	// It shouldn't reach this position
-	return 'x';
+  // It shouldn't reach this position
+  return 'x';
 }

@@ -13,16 +13,16 @@ const timeout = [];
 const test = true;
 
 for (const rule of ruleList) {
-	const command = require(`./rules/${rule}`);
-	ruleOrder.push(command);
+  const command = require(`./rules/${rule}`);
+  ruleOrder.push(command);
 }
 
 // A log message letting me know this bot is on
 client.on('ready', function() {
-	console.log(`${client.user.tag} is ready!`);
+  console.log(`${client.user.tag} is ready!`);
 
-	client.channels.fetch('857144974189920276')
-		.then(channel => console.log(channel.name));
+  client.channels.fetch('857144974189920276')
+    .then(channel => console.log(channel.name));
 });
 
 // Message send
@@ -36,13 +36,13 @@ client.on('message', message => {
   // If message is too long, deny
   if (message.cleanContent.length > 240) {
     message.react('⛔');
-		return;
+    return;
   }
 
-	if (timeout.includes(message.author.id)) {
-		message.react('⏰');
+  if (timeout.includes(message.author.id)) {
+    message.react('⏰');
     return;
-	}
+  }
 
   // Replace extra spaces with one
   const spaceUndoubler = / +/ig;
@@ -51,15 +51,15 @@ client.on('message', message => {
   // Grab the reactions
   const ruleCount = [];
 
-	// empty string check
-	if (filteredMessage.length < 1) {
-		message.react('❓');
-		return;
-	}
+  // empty string check
+  if (filteredMessage.length < 1) {
+    message.react('❓');
+    return;
+  }
 
   // Check each rule
-	for (const rule in ruleOrder) {
-		const ruleX = ruleOrder[rule].check(filteredMessage);
+  for (const rule in ruleOrder) {
+    const ruleX = ruleOrder[rule].check(filteredMessage);
     // React and add.
     if (ruleX) {
       message.react(emoji[ruleX]);
@@ -67,56 +67,56 @@ client.on('message', message => {
     }
   }
 
-	// Create user data
-	if (!userSave[message.author.id]) {
-		userSave[message.author.id] = { 'numberFree': 10, 'messages': [] };
-	}
+  // Create user data
+  if (!userSave[message.author.id]) {
+    userSave[message.author.id] = { 'numberFree': 10, 'messages': [] };
+  }
 
-	if (test) {
-		message.reply(filteredMessage + ruleCount.join(' '));
-		return;
-	}
+  if (test) {
+    message.reply(filteredMessage + ruleCount.join(' '));
+    return;
+  }
 
-	// Reply to data
-	const data = userSave[message.author.id];
-	data.messages.push([filteredMessage, ruleCount]);
+  // Reply to data
+  const data = userSave[message.author.id];
+  data.messages.push([filteredMessage, ruleCount]);
 
-	let replyText = '';
+  let replyText = '';
 
-	// Push message if old
-	if (data.messages.length > data.numberFree) {
-			const oldString = data.messages.shift();
+  // Push message if old
+  if (data.messages.length > data.numberFree) {
+      const oldString = data.messages.shift();
 
-			client.channels.fetch('857144974189920276')
-				.then(channel => channel.send('<@' + message.author.id +
-					'> tested this message: `' + oldString[0] + '`' +
-					String.fromCharCode(10) + oldString[1].join(' ')));
-	}
+      client.channels.fetch('857144974189920276')
+        .then(channel => channel.send('<@' + message.author.id +
+          '> tested this message: `' + oldString[0] + '`' +
+          String.fromCharCode(10) + oldString[1].join(' ')));
+  }
 
-	// Grab reply text.
-	replyText = data.messages.length.toString() + '/' + data.numberFree.toString()
-			+ ' hidden messages used.';
+  // Grab reply text.
+  replyText = data.messages.length.toString() + '/' + data.numberFree.toString()
+      + ' hidden messages used.';
 
-	if (data.messages.length == data.numberFree) {
-		replyText += String.fromCharCode(10) + 'Your oldest hidden message `'
-				+ data.messages[0][0] + '` will be posted next.';
-	}
+  if (data.messages.length == data.numberFree) {
+    replyText += String.fromCharCode(10) + 'Your oldest hidden message `'
+        + data.messages[0][0] + '` will be posted next.';
+  }
 
-	message.reply(replyText);
+  message.reply(replyText);
 
-	// Save
-	fs.writeFile ('./userData.json', JSON.stringify(userSave, null, 4), function(err) {
-		if (err) throw err;
-		console.log('completed writing to easterEgg.json');
-	});
+  // Save
+  fs.writeFile ('./userData.json', JSON.stringify(userSave, null, 4), function(err) {
+    if (err) throw err;
+    console.log('completed writing to easterEgg.json');
+  });
 
-	timeout.push(message.author.id);
+  timeout.push(message.author.id);
 
-	setTimeout(timeoutSlide, 6000);
+  setTimeout(timeoutSlide, 6000);
 });
 
 function timeoutSlide() {
-	timeout.shift();
+  timeout.shift();
 }
 
 client.login(auth.token);
